@@ -12,3 +12,9 @@ Sovelluksen ominaisuuksia ovat:
 * Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 * Ylläpitäjä voi lisätä ja poistaa viestejä.
 * Ylläpitäjä voi julkaista lisää blogeja.
+
+* Ohjeet testaajalle
+* Tietokannassa tulee olla tämä taulu (CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT, password TEXT);
+* hakemistossa tulee olla .env tiedostossa jossa on salainen avain SECRET_KEY=*************
+* muista vaihtaa oma käyttäjä kohtaan app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///cerfkris" app.py tiedostossa
+* Tällä hetkellä sovelluksessa toimii kirjautuminen ja virheviestit kirjautimesessa
