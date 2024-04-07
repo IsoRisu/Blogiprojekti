@@ -30,10 +30,6 @@ app.secret_key = getenv("SECRET_KEY")
 def index():
     return render_template("home.html", posts = posts)
 
-@app.route("/about")
-def about():
-    return render_template("about.html", title = "About")
-
 @app.route("/login",methods=["POST"])
 def login():
     username = request.form["username"]
