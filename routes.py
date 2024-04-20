@@ -2,28 +2,20 @@ from flask import redirect, render_template, request, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+import datetime
 from app import app
 from flask import render_template
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogs"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///"
 db = SQLAlchemy(app)
-
-posts = [
-    {   "author": "Risu",
-        "title": "Ensimmainen blogini",
-        "content": "Tama on ensimmainen kirjoitukseni.",
-        "date_posted": "7.4.2024"
-    },
-    {   "author": "Kisu",
-        "title": "Hellurei",
-        "content": "Moi kaikille.",
-        "date_posted": "6.4.2024"
-    }
-]
 
 @app.route("/")
 @app.route("/home")
 def index():
+    sql = text("SELECT author, title, content, date_posted FROM blogs ORDER BY id DESC")
+    result = db.session.execute(sql)
+    posts = result.fetchall()
+    
     return render_template("home.html", posts = posts)
 
 @app.route("/login",methods=["POST"])
@@ -69,7 +61,7 @@ def blog():
     author = session["username"]
     title = request.form["otsikko"]
     content = request.form["teksti"]
-    sql = text("INSERT INTO blogs (author, title, content, date) VALUES (:author, :title, :content, now())")
+    sql = text("INSERT INTO blogs (author, title, content) VALUES (:author, :title, :content)")
     db.session.execute(sql, {"author":author, "title":title, "content":content,})
     db.session.commit()
     return redirect("/")
