@@ -4,6 +4,14 @@
     <p>Olet kirjautunut nimellä {{ session.username }}</p>
     <a href="/logout">Kirjaudu ulos</a>
     <h1>RisuPalsta</h1>
+    <h2>julkaise blogi</h2>
+    <form action="/blog" method="POST">
+    <p>otsikko</p>
+    <input type="text" name="otsikko"></p>
+    <p>teksti</p>
+    <input type="text" name="teksti"></p>
+    <input type="submit" value="julkaise">
+    </form>
     {% for post in posts %}
         <h1>{{ post.title }}</h1>
         <p>By {{ post.author}} on {{ post.date_posted }}</p>
