@@ -14,7 +14,11 @@ Sovelluksen ominaisuuksia ovat:
 * Ylläpitäjä voi julkaista lisää blogeja.
 
 * Ohjeet testaajalle
-* Tietokannassa tulee olla tämä taulu (CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT, password TEXT);
-* hakemistossa tulee olla .env tiedostossa jossa on salainen avain SECRET_KEY=*************
-* muista vaihtaa oma käyttäjä kohtaan app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///cerfkris" app.py tiedostossa
-* Tällä hetkellä sovelluksessa toimii kirjautuminen ja virheviestit kirjautimesessa
+* Kloonaa repositorio
+* Käynnistä virtuaaliympäristö kansiossa jonne kloonasit repositorion
+* hakemistossa tulee olla .env tiedosto, jossa on salainen avain SECRET_KEY=*************
+* Tietokanta voidaan määrittää psql < schema.sql  komennolla
+* muista vaihtaa oma tietokannan osoite kohtaan app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///cerfkris" app.py tiedostossa
+* Sovellus avautuu kirjautumissivulle jossa voit myös rekisteröityä
+* Luo käyttäjä ja kirjaudu sisään
+* Käyttäjä voi lisätä blogeja palstalle ja tarkastella muiden julkaisuja 
