@@ -61,7 +61,7 @@ def blog():
     author = session["username"]
     title = request.form["otsikko"]
     content = request.form["teksti"]
-    sql = text("INSERT INTO blogs (author, title, content) VALUES (:author, :title, :content)")
+    sql = text("INSERT INTO blogs (author, title, content, date_posted) VALUES (:author, :title, :content, current_timestamp)")
     db.session.execute(sql, {"author":author, "title":title, "content":content,})
     db.session.commit()
     return redirect("/")
