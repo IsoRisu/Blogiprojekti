@@ -16,7 +16,8 @@ CREATE TABLE public.blogs (
 
 CREATE TABLE public.votes (
     id serial primary key,
-    vote integer
+    blog_id integer references blogs,
+    user_id integer references users,
 );
 
 

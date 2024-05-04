@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from app import app
 from flask import render_template
-import db
+from db import db
 
 @app.route("/")
 @app.route("/home")
@@ -62,6 +62,12 @@ def blog():
     db.session.execute(sql, {"author":author, "title":title, "content":content,})
     db.session.commit()
     return redirect("/")
+
+@app.route("/vote", methods=["POST"])
+def vote():
+    pass
+
+
 @app.route("/logout")
 def logout():
     del session["username"]
