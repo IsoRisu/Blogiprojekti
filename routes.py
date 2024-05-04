@@ -6,10 +6,11 @@ from app import app
 from flask import render_template
 from db import db
 
+
 @app.route("/")
 @app.route("/home")
 def index():
-    sql = text("SELECT author, title, content, date_posted FROM blogs ORDER BY id DESC")
+    sql = text("SELECT b.*, COALESCE(SUM(v.vote), 0) AS total_votes FROM blogs b LEFT JOIN votes v ON b.id = v.blog_id GROUP BY b.id")
     result = db.session.execute(sql)
     posts = result.fetchall()
     
@@ -63,9 +64,31 @@ def blog():
     db.session.commit()
     return redirect("/")
 
-@app.route("/vote", methods=["POST"])
-def vote():
-    pass
+@app.route("/votef", methods=["POST"])
+def votef():
+    blog_id = request.form.get("blog_id")
+
+    username = session["username"]
+    sql = text(f"SELECT id FROM users WHERE username = '{username}'")
+    user_id = db.session.execute(sql, {"username": username})
+    user_id = user_id.fetchone()[0]
+    
+
+    vote_type = request.form.get("vote_type")
+    
+    if vote_type not in ["upvote", "downvote"]:
+        flash("Invalid vote type", "error")
+        return redirect("/")
+    elif vote_type == "upvote":
+        vote_type = 1
+    else:
+        vote_type = -1
+    
+    sql = text("INSERT INTO votes (blog_id, user_id, vote) VALUES (:blog_id, :user_id, :vote)")
+    db.session.execute(sql, {"blog_id":blog_id, "user_id":user_id, "vote":vote_type})
+    db.session.commit()
+    
+    return redirect("/")
 
 
 @app.route("/logout")
