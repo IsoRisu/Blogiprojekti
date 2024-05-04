@@ -1,5 +1,5 @@
 from flask import Flask
-from os import geten
+from os import getenv
 
 app = Flask(__name__)
 

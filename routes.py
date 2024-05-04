@@ -2,12 +2,9 @@ from flask import redirect, render_template, request, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
-import datetime
 from app import app
 from flask import render_template
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///"
-db = SQLAlchemy(app)
+import db
 
 @app.route("/")
 @app.route("/home")
@@ -33,11 +30,11 @@ def login():
         hash_value = user.password
         if check_password_hash(hash_value, password):
             session["username"] = username
-            wrong = ""
             return redirect("/")
         else:
             flash("wrong password!")
             return redirect("/")
+
 
 @app.route("/register",methods=["POST"])
 def register():
