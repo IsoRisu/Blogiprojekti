@@ -1,5 +1,5 @@
 from db import db
-from flask import session
+from flask import abort, session, request
 from sqlalchemy import text
 
 def get_userid():
@@ -24,4 +24,8 @@ def is_admin():
     if admin_id is not None:
         return True
     return False
+
+def csrf_check():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 

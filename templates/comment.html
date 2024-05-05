@@ -5,6 +5,7 @@
     <p>{{ blog_id }}</p>
     <p>Jätä kommentti</p>
     <form action="/leavecomment" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="blog_id" value="{{ blog_id }}">
         <input type="text" name="teksti"></p>
         <input type="submit" value="julkaise">
@@ -16,6 +17,7 @@
         {{ comment.date_posted }}
         {% if admin %}
             <form action="/delete_comment" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="hidden" name="comment_id" value="{{ comment.id }}">
                 <input type="hidden" name="blog_id" value="{{ blog_id }}">
                 <input type="submit" value="poista">

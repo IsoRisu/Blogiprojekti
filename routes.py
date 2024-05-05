@@ -6,6 +6,8 @@ from app import app
 from flask import render_template
 from db import db
 import users
+import secrets
+
 
 
 @app.route("/")
@@ -23,6 +25,7 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
+
     sql = text("SELECT id, password FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()    
@@ -33,6 +36,7 @@ def login():
         hash_value = user.password
         if check_password_hash(hash_value, password):
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             flash("wrong password!")
@@ -42,6 +46,7 @@ def login():
 @app.route("/register",methods=["POST"])
 def register():
     username = request.form["username"]
+    users.csrf_check()
     sql = text("SELECT id, password FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()    
@@ -61,6 +66,7 @@ def blog():
     author = session["username"]
     title = request.form["otsikko"]
     content = request.form["teksti"]
+    users.csrf_check()
     sql = text("INSERT INTO blogs (author, title, content, date_posted) VALUES (:author, :title, :content, current_timestamp)")
     db.session.execute(sql, {"author":author, "title":title, "content":content,})
     db.session.commit()
@@ -71,6 +77,7 @@ def votef():
     blog_id = request.form.get("blog_id")
 
     user_id = users.get_userid()
+    users.csrf_check()
     
     sql = text(f"select sum(vote) from votes where user_id = {user_id} and blog_id = {blog_id}")
     votes = db.session.execute(sql, {"user_id": user_id, "blog_id": blog_id})
@@ -111,6 +118,7 @@ def leavecomment():
     username = session["username"]
     blog_id = request.form.get("blog_id")
     user_id = users.get_userid()
+    users.csrf_check()
 
     sql = text("INSERT INTO comments (content, username, blog_id, user_id,  date_posted) VALUES (:content, :username, :blog_id, :user_id, current_timestamp)")
     db.session.execute(sql, {"content":content, "username":username, "blog_id":blog_id, "user_id":user_id})
@@ -121,6 +129,7 @@ def leavecomment():
 @app.route("/delete", methods=["POST"])   
 def delete():
     blog_id = request.form.get("blog_id")
+    users.csrf_check()
 
     sql = text(f"DELETE FROM blogs WHERE id = {blog_id}")
     db.session.execute(sql, {"id":blog_id})
@@ -132,6 +141,7 @@ def delete():
 def delete_comment():
     comment_id = request.form.get("comment_id")
     blog_id = request.form.get("blog_id")
+    users.csrf_check()
 
     sql = text(f"DELETE FROM comments WHERE id = {comment_id}")
     db.session.execute(sql, {"id":comment_id})

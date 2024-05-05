@@ -1,0 +1,59 @@
+* {
+    font-family: 'Trebuchet MS', sans-serif;
+    text-align: center;
+    margin: 0 auto;
+}
+
+h1, h2, p {
+    text-align: center;
+}
+
+.metadata {
+    font-style: italic;
+    color: #666;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.votes {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.submit-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}

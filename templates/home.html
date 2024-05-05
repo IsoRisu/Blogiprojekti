@@ -6,6 +6,7 @@
     <h1>RisuPalsta</h1>
     <h2>julkaise blogi</h2>
     <form action="/blog" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <p>otsikko</p>
         <input type="text" name="otsikko"></p>
         <p>teksti</p>
@@ -13,43 +14,60 @@
         <input type="submit" value="julkaise">
     </form>
     {% for post in posts %}
+    <div class="post">
         <h1>{{ post.title }}</h1>
-        <p>By {{ post.author}} on {{ post.date_posted }}</p>
-        <p>{{ post.content }}</p>
-        <p>Total Votes: {{ post.total_votes }}</p>
-        <form action="/votef" method="POST">
-            <input type="hidden" name="blog_id" value="{{ post.id }}">
-            <button type="submit" name="vote_type" value="upvote">Ruusuja</button>
-            <button type="submit" name="vote_type" value="downvote">Risuja</button>
-        </form>
-        <form action="/comment/{{ post.id }}" method="GET">
-            <input type="submit" value="Comments">
-        </form>
-        
-        {% if admin %}
-            <form action="/delete" method="POST">
+        <p class="metadata">By {{ post.author }} on {{ post.date_posted }}</p>
+        <p class="content">{{ post.content }}</p>
+        <p class="votes">Total Votes: {{ post.total_votes }}</p>
+        <div>
+            <form action="/votef" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="hidden" name="blog_id" value="{{ post.id }}">
-                <input type="submit" value="poista">
+                <button type="submit" name="vote_type" value="upvote">Ruusuja</button>
+                <button type="submit" name="vote_type" value="downvote">Risuja</button>
             </form>
-        {% endif %}
-        
-
+            <form action="/comment/{{ post.id }}" method="GET">
+                <input type="submit" value="Kommentit">
+            </form>
+            
+            {% if admin %}
+                <form action="/delete" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <input type="hidden" name="blog_id" value="{{ post.id }}">
+                    <input type="submit" value="poista">
+                </form>
+            {% endif %}
+        </div>
+    </div>
     {% endfor %}
+        
     {% else %}
     <h1>RisuPalsta</h1>
-    <form action="/login" method="POST">
-        <p>Tunnus:<br>
-        <input type="text" name="username"></p>
-        <p>Salasana:<br>
-        <input type="password" name="password"></p>
-        <input type="submit" value="Kirjaudu">
+    <div class="container">
+        <form action="/login" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <div>
+                <label for="username">Tunnus:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div>
+                <label for="password">Salasana:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <input type="submit" value="Kirjaudu">
         </form>
-    <form action="/register" method="POST">
-        <p>Tunnus:<br>
-        <input type="text" name="username"></p>
-        <p>Salasana:<br>
-        <input type="password" name="password"></p>
-        <input type="submit" value="Rekisteroidy">
-    </form>
+        <form action="/register" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <div>
+                <label for="register-username">Tunnus:</label>
+                <input type="text" id="register-username" name="username">
+            </div>
+            <div>
+                <label for="register-password">Salasana:</label>
+                <input type="password" id="register-password" name="password">
+            </div>
+            <input type="submit" value="Rekisteroidy">
+        </form>
+    </div>
     {% endif %}
 {% endblock content %}
