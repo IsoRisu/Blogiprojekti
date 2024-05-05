@@ -5,6 +5,7 @@ from sqlalchemy.sql import text
 from app import app
 from flask import render_template
 from db import db
+import users
 
 
 @app.route("/")
@@ -13,8 +14,9 @@ def index():
     sql = text("SELECT b.*, COALESCE(SUM(v.vote), 0) AS total_votes FROM blogs b LEFT JOIN votes v ON b.id = v.blog_id GROUP BY b.id")
     result = db.session.execute(sql)
     posts = result.fetchall()
+    admin = users.is_admin()
     
-    return render_template("home.html", posts = posts)
+    return render_template("home.html", posts = posts, admin = admin)
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -68,10 +70,7 @@ def blog():
 def votef():
     blog_id = request.form.get("blog_id")
 
-    username = session["username"]
-    sql = text(f"SELECT id FROM users WHERE username = '{username}'")
-    user_id = db.session.execute(sql, {"username": username})
-    user_id = user_id.fetchone()[0]
+    user_id = users.get_userid()
     
     sql = text(f"select sum(vote) from votes where user_id = {user_id} and blog_id = {blog_id}")
     votes = db.session.execute(sql, {"user_id": user_id, "blog_id": blog_id})
@@ -110,17 +109,23 @@ def leavecomment():
     content = request.form.get("teksti")
     username = session["username"]
     blog_id = request.form.get("blog_id")
-
-    sql = text(f"SELECT id FROM users WHERE username = '{username}'")
-    user_id = db.session.execute(sql, {"username": username})
-    user_id = user_id.fetchone()[0]
+    user_id = users.get_userid()
 
     sql = text("INSERT INTO comments (content, username, blog_id, user_id,  date_posted) VALUES (:content, :username, :blog_id, :user_id, current_timestamp)")
     db.session.execute(sql, {"content":content, "username":username, "blog_id":blog_id, "user_id":user_id})
     db.session.commit()
 
     return redirect(f"/comment/{blog_id}")
-    
+
+@app.route("/delete", methods=["POST"])   
+def delete():
+    blog_id = request.form.get("blog_id")
+
+    sql = text(f"DELETE FROM blogs WHERE id = {blog_id}")
+    db.session.execute(sql, {"id":blog_id})
+    db.session.commit()
+
+    return redirect("/") 
 
 @app.route("/logout")
 def logout():

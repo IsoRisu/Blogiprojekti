@@ -19,12 +19,21 @@
         <p>Total Votes: {{ post.total_votes }}</p>
         <form action="/votef" method="POST">
             <input type="hidden" name="blog_id" value="{{ post.id }}">
-            <button type="submit" name="vote_type" value="upvote">Upvote</button>
-            <button type="submit" name="vote_type" value="downvote">Downvote</button>
+            <button type="submit" name="vote_type" value="upvote">Ruusuja</button>
+            <button type="submit" name="vote_type" value="downvote">Risuja</button>
         </form>
         <form action="/comment/{{ post.id }}" method="GET">
             <input type="submit" value="Comments">
         </form>
+        
+        {% if admin %}
+            <form action="/delete" method="POST">
+                <input type="hidden" name="blog_id" value="{{ post.id }}">
+                <input type="submit" value="poista">
+            </form>
+        {% endif %}
+        
+
     {% endfor %}
     {% else %}
     <h1>RisuPalsta</h1>
