@@ -21,4 +21,14 @@ CREATE TABLE public.votes (
     vote integer default 0
 );
 
+CREATE TABLE public.comments (
+    id serial primary key,
+    blog_id integer references blogs,
+    user_id integer references users,
+    username text,
+    content text,
+    date_posted timestamp
+    
+);
+
 

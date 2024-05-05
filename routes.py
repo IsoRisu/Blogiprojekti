@@ -73,6 +73,12 @@ def votef():
     user_id = db.session.execute(sql, {"username": username})
     user_id = user_id.fetchone()[0]
     
+    sql = text(f"select sum(vote) from votes where user_id = {user_id} and blog_id = {blog_id}")
+    votes = db.session.execute(sql, {"user_id": user_id, "blog_id": blog_id})
+    votes = votes.fetchone()[0]
+    if votes != None:
+        flash(f"Already voted on this blog {votes}", "error")
+        return redirect("/")
 
     vote_type = request.form.get("vote_type")
     
@@ -90,6 +96,31 @@ def votef():
     
     return redirect("/")
 
+
+@app.route("/comment/<int:blog_id>")
+def comment(blog_id):
+    sql = text(f"SELECT * FROM comments WHERE blog_id = {blog_id} ORDER BY date_posted;")
+    result = db.session.execute(sql)
+    comments = result.fetchall()
+
+    return render_template("comment.html", blog_id=blog_id, comments=comments)
+
+@app.route("/leavecomment", methods=["POST"])
+def leavecomment():
+    content = request.form.get("teksti")
+    username = session["username"]
+    blog_id = request.form.get("blog_id")
+
+    sql = text(f"SELECT id FROM users WHERE username = '{username}'")
+    user_id = db.session.execute(sql, {"username": username})
+    user_id = user_id.fetchone()[0]
+
+    sql = text("INSERT INTO comments (content, username, blog_id, user_id,  date_posted) VALUES (:content, :username, :blog_id, :user_id, current_timestamp)")
+    db.session.execute(sql, {"content":content, "username":username, "blog_id":blog_id, "user_id":user_id})
+    db.session.commit()
+
+    return redirect(f"/comment/{blog_id}")
+    
 
 @app.route("/logout")
 def logout():
