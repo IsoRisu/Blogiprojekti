@@ -25,6 +25,13 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
+    if len(username) > 100:
+        flash(f"Käuttäjänimi on yli 100 merkkiä", "error")
+        return redirect("/")
+    
+    if len(password) > 200:
+        flash(f"Salasana on yli 200 merkkiä", "error")
+        return redirect("/")
 
     sql = text("SELECT id, password FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
@@ -47,11 +54,21 @@ def login():
 def register():
     username = request.form["username"]
     users.csrf_check()
+
+    if len(username) > 100:
+        flash(f"Käuttäjänimi on yli 100 merkkiä", "error")
+        return redirect("/")
+
     sql = text("SELECT id, password FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()    
     if not user:
         password = request.form["password"]
+        
+        if len(password) > 200:
+            flash(f"Salasana on yli 200 merkkiä", "error")
+            return redirect("/")
+    
         hash_value = generate_password_hash(password)
         sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
         db.session.execute(sql, {"username":username, "password":hash_value})
@@ -66,6 +83,13 @@ def blog():
     author = session["username"]
     title = request.form["otsikko"]
     content = request.form["teksti"]
+    if len(title) > 100:
+        flash(f"Otsikko on yli 100 merkkiä", "error")
+        return redirect("/")
+    if len(content) > 5000:
+        flash(f"Sisältö on yli 5000 merkkiä", "error")
+        return redirect("/")
+        
     users.csrf_check()
     sql = text("INSERT INTO blogs (author, title, content, date_posted) VALUES (:author, :title, :content, current_timestamp)")
     db.session.execute(sql, {"author":author, "title":title, "content":content,})
@@ -119,6 +143,10 @@ def leavecomment():
     blog_id = request.form.get("blog_id")
     user_id = users.get_userid()
     users.csrf_check()
+
+    if len(content) > 5000:
+        flash(f"Sisältö on yli 5000 merkkiä", "error")
+        return redirect(f"/comment/{blog_id}")
 
     sql = text("INSERT INTO comments (content, username, blog_id, user_id,  date_posted) VALUES (:content, :username, :blog_id, :user_id, current_timestamp)")
     db.session.execute(sql, {"content":content, "username":username, "blog_id":blog_id, "user_id":user_id})
