@@ -101,8 +101,9 @@ def comment(blog_id):
     sql = text(f"SELECT * FROM comments WHERE blog_id = {blog_id} ORDER BY date_posted;")
     result = db.session.execute(sql)
     comments = result.fetchall()
+    admin = users.is_admin()
 
-    return render_template("comment.html", blog_id=blog_id, comments=comments)
+    return render_template("comment.html", blog_id=blog_id, comments=comments, admin=admin)
 
 @app.route("/leavecomment", methods=["POST"])
 def leavecomment():
@@ -126,6 +127,17 @@ def delete():
     db.session.commit()
 
     return redirect("/") 
+
+@app.route("/delete_comment", methods=["POST"])   
+def delete_comment():
+    comment_id = request.form.get("comment_id")
+    blog_id = request.form.get("blog_id")
+
+    sql = text(f"DELETE FROM comments WHERE id = {comment_id}")
+    db.session.execute(sql, {"id":comment_id})
+    db.session.commit()
+
+    return redirect(f"/comment/{blog_id}") 
 
 @app.route("/logout")
 def logout():

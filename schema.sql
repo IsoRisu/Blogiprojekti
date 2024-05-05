@@ -19,18 +19,6 @@ CREATE TABLE public.admins(
     user_id integer references users
 );
 
-CREATE TABLE public.groups (
-    id serial primary key,
-    group_name text
-);
-
-CREATE TABLE public.blog_groups (
-    id serial primary key,
-    group_id integer references groups on delete cascade,
-    blog_id integer references blogs on delete cascade
-
-)
-
 
 CREATE TABLE public.votes (
     id serial primary key,
