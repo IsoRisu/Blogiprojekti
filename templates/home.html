@@ -3,7 +3,9 @@
     {% if session.username %}
     <p>Olet kirjautunut nimellä {{ session.username }}</p>
     <a href="/logout">Kirjaudu ulos</a>
-    <h1>RisuPalsta</h1>
+    <div class="header">
+        <h1>RisuPalsta</h1>
+    </div>
     <h2>julkaise blogi</h2>
     <form action="/blog" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -42,7 +44,9 @@
     {% endfor %}
         
     {% else %}
-    <h1>RisuPalsta</h1>
+    <div class="header">
+        <h1>RisuPalsta</h1>
+    </div>
     <div class="container">
         <form action="/login" method="POST">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

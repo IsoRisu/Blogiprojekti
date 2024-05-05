@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 {% if session.username %}
+    <div class="header">
+        <h1>RisuPalsta</h1>
+     </div>
     <p>Olet kirjautunut nimellä {{ session.username }}</p>
     <p>{{ blog_id }}</p>
     <p>Jätä kommentti</p>
