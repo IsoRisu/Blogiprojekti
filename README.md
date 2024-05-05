@@ -15,10 +15,17 @@ Sovelluksen ominaisuuksia ovat:
 
 * Ohjeet testaajalle
 * Kloonaa repositorio
-* Käynnistä virtuaaliympäristö kansiossa jonne kloonasit repositorion
-* hakemistossa tulee olla .env tiedosto, jossa on salainen avain SECRET_KEY=*************
-* Tietokanta voidaan määrittää psql < schema.sql  komennolla
-* muista vaihtaa oma tietokannan osoite kohtaan app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///cerfkris" app.py tiedostossa
+
+* Suorita seuraavat komennot Blogiprojekti kansiossa
+* python3 -m venv venv
+* source venv/bin/activate
+* pip install -r ./requirements.txt
+* psql < schema.sql
+* hakemistossa tulee olla .env tiedosto, jossa on salainen avain SECRET_KEY= ja DATABASE_URL
+* flask run
+
 * Sovellus avautuu kirjautumissivulle jossa voit myös rekisteröityä
 * Luo käyttäjä ja kirjaudu sisään
-* Käyttäjä voi lisätä blogeja palstalle ja tarkastella muiden julkaisuja 
+* Käyttäjä voi lisätä blogeja palstalle ja tarkastella muiden julkaisuja
+* Blogeja voi arvostella ja kommentoida
+* Käyttäjä voi kirjautua ulis
