@@ -5,7 +5,6 @@
         <h1>RisuPalsta</h1>
      </div>
     <p>Olet kirjautunut nimellä {{ session.username }}</p>
-    <p>{{ blog_id }}</p>
     <p>Jätä kommentti</p>
     <form action="/leavecomment" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
